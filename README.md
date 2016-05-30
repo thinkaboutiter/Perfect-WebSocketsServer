@@ -13,7 +13,7 @@ Add one or more URL routes using the `Routing.Routes` subscript functions. These
 
 The following code is taken from the example project and shows how to enable the system and add a WebSocket handler.
 
-```
+```swift
 func addWebSocketsHandler() {
     
     // Add a default route which lets us serve the static index.html file
@@ -57,7 +57,7 @@ func addWebSocketsHandler() {
 
 The example `EchoHandler` consists of the following.
 
-```
+```swift
 class EchoHandler: WebSocketSessionHandler {
 	
 	// The name of the super-protocol we implement.
