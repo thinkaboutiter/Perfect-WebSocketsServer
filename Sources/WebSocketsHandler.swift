@@ -1,19 +1,24 @@
-# WebSockets Serving
-This example illustrates how to set up a WebSocket server and handle a connection.
+//
+//  PerfectHandlers.swift
+//  WebSockets Server
+//
+//  Created by Kyle Jessup on 2016-01-06.
+//  Copyright PerfectlySoft 2016. All rights reserved.
+//
+//===----------------------------------------------------------------------===//
+//
+// This source file is part of the Perfect.org open source project
+//
+// Copyright (c) 2015 - 2016 PerfectlySoft Inc. and the Perfect project authors
+// Licensed under Apache License v2.0
+//
+// See http://perfect.org/licensing.html for license information
+//
+//===----------------------------------------------------------------------===//
+//
 
-To use the example with Swift Package Manager, type ```swift build``` and then run ``` .build/debug/WebSocketsServer```.
+import PerfectLib
 
-To use the example with Xcode, run the **WebSockets Server** target. This will launch the Perfect HTTP Server. 
-
-Navigate in your web browser to [http://localhost:8181/](http://localhost:8181/)
-
-## Initiating a WebSocket Session
-
-Add one or more URL routes using the `Routing.Routes` subscript functions. These routes will be the endpoints for the WebSocket session. Set the route handler to `WebSocketHandler` and provide your custom closure which will return your own session handler.
-
-The following code is taken from the example project and shows how to enable the system and add a WebSocket handler.
-
-```
 func addWebSocketsHandler() {
     
     // Add a default route which lets us serve the static index.html file
@@ -38,26 +43,28 @@ func addWebSocketsHandler() {
         }).handleRequest(request: request, response: response)
     }
 }
-```
-## Handling WebSocket Sessions
 
- A WebSocket service handler must impliment the `WebSocketSessionHandler` protocol.
- This protocol requires the function `handleSession(request: WebRequest, socket: WebSocket)`.
- This function will be called once the WebSocket connection has been established,
- at which point it is safe to begin reading and writing messages.
+// This is the function which all Perfect Server modules must expose.
+// The system will load the module and call this function.
+// In here, register any handlers or perform any one-time tasks.
+// This is not required when compiling as a stand alone executable, but having it lets us function in a multi-module environment.
+public func PerfectServerModuleInit() {
+	
+	addWebSocketsHandler()
+}
 
- The initial `WebRequest` object which instigated the session is provided for reference.
- Messages are transmitted through the provided WebSocket object. 
- Call `WebSocket.sendStringMessage` or `WebSocket.sendBinaryMessage` to send data to the client.
- Call `WebSocket.readStringMessage` or `WebSocket.readBinaryMessage` to read data from the client.
- By default, reading will block indefinitely until a message arrives or a network error occurs.
- A read timeout can be set with `WebSocket.readTimeoutSeconds`.
- When the session is over call `WebSocket.close()`.
-
-
-The example `EchoHandler` consists of the following.
-
-```
+// A WebSocket service handler must impliment the `WebSocketSessionHandler` protocol.
+// This protocol requires the function `handleSession(request: WebRequest, socket: WebSocket)`.
+// This function will be called once the WebSocket connection has been established,
+// at which point it is safe to begin reading and writing messages.
+//
+// The initial `WebRequest` object which instigated the session is provided for reference.
+// Messages are transmitted through the provided `WebSocket` object.
+// Call `WebSocket.sendStringMessage` or `WebSocket.sendBinaryMessage` to send data to the client.
+// Call `WebSocket.readStringMessage` or `WebSocket.readBinaryMessage` to read data from the client.
+// By default, reading will block indefinitely until a message arrives or a network error occurs.
+// A read timeout can be set with `WebSocket.readTimeoutSeconds`.
+// When the session is over call `WebSocket.close()`.
 class EchoHandler: WebSocketSessionHandler {
 	
 	// The name of the super-protocol we implement.
@@ -68,7 +75,7 @@ class EchoHandler: WebSocketSessionHandler {
 	func handleSession(request: WebRequest, socket: WebSocket) {
 		
 		// Read a message from the client as a String.
-		// Alternatively we could call `WebSocket.readBytesMessage` to get the data as a String.
+		// Alternatively we could call `WebSocket.readBytesMessage` to get binary data from the client.
 		socket.readStringMessage {
 			// This callback is provided:
 			//	the received data
@@ -92,16 +99,14 @@ class EchoHandler: WebSocketSessionHandler {
 			// For example, if one were streaming a large file such as a video, one would pass false for final.
 			// This indicates to the receiver that there is more data to come in subsequent messages but that all the data is part of the same logical message.
 			// In such a scenario one would pass true for final only on the last bit of the video.
-			socket.sendStringMessage(string, final: true) {
+			socket.sendStringMessage(string: string, final: true) {
 				
 				// This callback is called once the message has been sent.
 				// Recurse to read and echo new message.
-				self.handleSession(request, socket: socket)
+				self.handleSession(request: request, socket: socket)
 			}
 		}
 	}
 }
-```
 
-## FastCGI Caveat
-WebSockets serving is only supported with the stand-alone Perfect HTTP server. At this time, the WebSocket server does not operate with the Perfect FastCGI server.
+
