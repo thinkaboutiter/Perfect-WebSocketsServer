@@ -25,6 +25,6 @@ let package = Package(
 		
 	],
 	dependencies: [
-		.Package(url:"https://github.com/PerfectlySoft/Perfect.git", majorVersion: 0, minor: 19)
+		.Package(url:"https://github.com/PerfectlySoft/Perfect.git", versions: Version(0,0,0)..<Version(10,0,0))
 	]
 )
