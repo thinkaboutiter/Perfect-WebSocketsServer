@@ -25,7 +25,7 @@ func addWebSocketsHandler() {
     Routing.Routes["*"] = { request, response in StaticFileHandler().handleRequest(request: request, response: response) }
     
     // Add the endpoint for the WebSocket example system
-    Routing.Routes[.Get, "/echo"] = {
+    Routing.Routes[.get, "/echo"] = {
         request, response in
         
         // To add a WebSocket service, set the handler to WebSocketHandler.
