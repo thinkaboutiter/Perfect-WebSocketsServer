@@ -18,6 +18,7 @@
 //
 
 import PerfectLib
+import PerfectWebSockets
 
 func addWebSocketsHandler() {
     
