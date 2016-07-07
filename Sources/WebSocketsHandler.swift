@@ -19,6 +19,7 @@
 
 import PerfectLib
 import PerfectWebSockets
+import PerfectHTTP
 
 func addWebSocketsHandler() {
     
@@ -32,7 +33,7 @@ func addWebSocketsHandler() {
         // To add a WebSocket service, set the handler to WebSocketHandler.
         // Provide your closure which will return your service handler.
         WebSocketHandler(handlerProducer: {
-            (request: WebRequest, protocols: [String]) -> WebSocketSessionHandler? in
+            (request: HTTPRequest, protocols: [String]) -> WebSocketSessionHandler? in
             
             // Check to make sure the client is requesting our "echo" service.
             guard protocols.contains("echo") else {
@@ -73,7 +74,7 @@ class EchoHandler: WebSocketSessionHandler {
 	let socketProtocol: String? = "echo"
 	
 	// This function is called by the WebSocketHandler once the connection has been established.
-	func handleSession(request: WebRequest, socket: WebSocket) {
+	func handleSession(request: HTTPRequest, socket: WebSocket) {
 		
 		// Read a message from the client as a String.
 		// Alternatively we could call `WebSocket.readBytesMessage` to get binary data from the client.

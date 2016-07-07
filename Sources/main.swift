@@ -18,6 +18,7 @@
 //
 
 import PerfectLib
+import PerfectHTTPServer
 
 // Initialize base-level services
 PerfectServer.initializeServices()
