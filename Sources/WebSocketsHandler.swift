@@ -21,13 +21,14 @@ import PerfectLib
 import PerfectWebSockets
 import PerfectHTTP
 
-func addWebSocketsHandler() {
-    
+func makeRoutes() -> Routes {
+	
+	var routes = Routes()
     // Add a default route which lets us serve the static index.html file
-    Routing.Routes["*"] = { request, response in StaticFileHandler().handleRequest(request: request, response: response) }
+	routes.add(method: .get, uri: "*", handler: { request, response in StaticFileHandler().handleRequest(request: request, response: response) })
     
     // Add the endpoint for the WebSocket example system
-    Routing.Routes[.get, "/echo"] = {
+	routes.add(method: .get, uri: "/echo", handler: {
         request, response in
         
         // To add a WebSocket service, set the handler to WebSocketHandler.
@@ -43,16 +44,9 @@ func addWebSocketsHandler() {
             // Return our service handler.
             return EchoHandler()
         }).handleRequest(request: request, response: response)
-    }
-}
-
-// This is the function which all Perfect Server modules must expose.
-// The system will load the module and call this function.
-// In here, register any handlers or perform any one-time tasks.
-// This is not required when compiling as a stand alone executable, but having it lets us function in a multi-module environment.
-public func PerfectServerModuleInit() {
+    })
 	
-	addWebSocketsHandler()
+	return routes
 }
 
 // A WebSocket service handler must impliment the `WebSocketSessionHandler` protocol.

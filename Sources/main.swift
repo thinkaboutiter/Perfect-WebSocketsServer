@@ -18,23 +18,25 @@
 //
 
 import PerfectLib
+import PerfectHTTP
 import PerfectHTTPServer
 
-// Initialize base-level services
-PerfectServer.initializeServices()
+// Create HTTP server
+let server = HTTPServer()
 
-// Create our webroot
-let webRoot = "./webroot"
-try Dir(webRoot).create()
+// Set the server's webroot
+server.documentRoot = "./webroot"
 
 // Add our routes and such
-addWebSocketsHandler()
+let routes = makeRoutes()
+server.addRoutes(routes)
+
+// Listen on port 8181
+server.serverPort = 8181
 
 do {
-    
     // Launch the HTTP server on port 8181
-    try HTTPServer(documentRoot: webRoot).start(port: 8181)
-    
+    try server.start()    
 } catch PerfectError.networkError(let err, let msg) {
     print("Network error thrown: \(err) \(msg)")
 }
