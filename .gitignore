@@ -64,3 +64,4 @@ fastlane/screenshots
 
 Packages/
 WebSocketsServer.xcodeproj/
+.DS_Store
