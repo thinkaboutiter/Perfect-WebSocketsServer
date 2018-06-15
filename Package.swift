@@ -25,7 +25,7 @@ let package = Package(
 		
 	],
 	dependencies: [
-		.Package(url:"https://github.com/PerfectlySoft/Perfect-HTTPServer.git", majorVersion: 2),
-		.Package(url:"https://github.com/PerfectlySoft/Perfect-WebSockets.git", majorVersion: 2)
+		.Package(url:"https://github.com/PerfectlySoft/Perfect-HTTPServer.git", majorVersion: 3),
+		.Package(url:"https://github.com/PerfectlySoft/Perfect-WebSockets.git", majorVersion: 3)
 	]
 )
