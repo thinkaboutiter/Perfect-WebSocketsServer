@@ -26,7 +26,7 @@ func makeRoutes() -> Routes {
 	var routes = Routes()
     // Add a default route which lets us serve the static index.html file
 	routes.add(method: .get, uri: "*", handler: { request, response in
-		StaticFileHandler(documentRoot: request.documentRoot).handleRequest(request: request, response: response)
+		StaticFileHandler(documentRoot: request.documentRoot, allowResponseFilters: true).handleRequest(request: request, response: response)
 	})
     
     // Add the endpoint for the WebSocket example system
