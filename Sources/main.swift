@@ -21,12 +21,25 @@ import PerfectLib
 import PerfectHTTP
 import PerfectHTTPServer
 
+// Create HTTP server
+let server = HTTPServer()
+
+// Set the server's webroot
+server.documentRoot = "./webroot"
+server.serverAddress = "127.0.0.1"
+
+// Add our routes and such
+let routes = makeRoutes()
+server.addRoutes(routes)
+
+// Listen on port 8181
+server.serverPort = 8181
+
 do {
     // Launch the HTTP server on port 8181
-    try HTTPServer.launch(name: "websockets server",
-						  port: 8181,
-						  routes: makeRoutes(),
-						  responseFilters: [(try HTTPFilter.contentCompression(data: [:]), .high)])
-} catch PerfectError.networkError(let err, let msg) {
+    server.setResponseFilters([(try HTTPFilter.contentCompression(data: [:]), .high)])
+    try server.start()
+}
+catch PerfectError.networkError(let err, let msg) {
     print("Network error thrown: \(err) \(msg)")
 }
